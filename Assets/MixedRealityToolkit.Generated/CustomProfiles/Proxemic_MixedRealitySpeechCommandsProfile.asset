@@ -60,7 +60,35 @@ MonoBehaviour:
       axisConstraint: 0
   - localizationKey: 
     keyword: One
-    keyCode: 0
+    keyCode: 257
+    action:
+      id: 0
+      description: None
+      axisConstraint: 0
+  - localizationKey: 
+    keyword: Two
+    keyCode: 258
+    action:
+      id: 0
+      description: None
+      axisConstraint: 0
+  - localizationKey: 
+    keyword: Three
+    keyCode: 259
+    action:
+      id: 0
+      description: None
+      axisConstraint: 0
+  - localizationKey: 
+    keyword: Four
+    keyCode: 260
+    action:
+      id: 0
+      description: None
+      axisConstraint: 0
+  - localizationKey: 
+    keyword: Five
+    keyCode: 261
     action:
       id: 0
       description: None
