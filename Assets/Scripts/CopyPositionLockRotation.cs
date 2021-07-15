@@ -21,17 +21,21 @@ public class CopyPositionLockRotation : MonoBehaviour
     void Update()
     {
         transform.position = parent.transform.position;
-        transform.rotation = parent.transform.rotation;
-        
-        if(lockX)
-            transform.eulerAngles =new Vector3(0, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
-        
-        if(lockY)
-            transform.eulerAngles = new Vector3(transform.rotation.eulerAngles.x, 0, transform.rotation.eulerAngles.z);
 
-        if(lockZ)
-            transform.eulerAngles = new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0);
+        Vector3 v3 = new Vector3(0,0,0);
 
+        //if (lockX)
+            //v3.x = parent.transform.rotation.eulerAngles.x;
+            //transform.eulerAngles =new Vector3(0, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
 
+        //if (lockY)
+            //v3.y = parent.transform.rotation.eulerAngles.y;
+            //transform.eulerAngles = new Vector3(transform.rotation.eulerAngles.x, 0, transform.rotation.eulerAngles.z);
+
+         //if (lockZ)
+            v3.y = parent.transform.localRotation.eulerAngles.y;
+         //parent.transform.rotation.eulerAngles.y;
+        //transform.eulerAngles = new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0);
+         transform.rotation = Quaternion.Euler(v3);
     }
 }

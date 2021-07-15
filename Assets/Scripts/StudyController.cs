@@ -27,7 +27,7 @@ public class StudyController : MonoBehaviour
         Avatar[2] = GameObject.Find("Male_Adult_1");
         Avatar[3] = GameObject.Find("Male_Adult_2");
         Avatar[4] = GameObject.Find("Mannequin_1");
-        //Avatar[5] = GameObject.Find("");
+        Avatar[5] = GameObject.Find("Cylinder");
 
 
         // Samoty Check including disabeling all avatars
