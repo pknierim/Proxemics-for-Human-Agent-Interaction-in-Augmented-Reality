@@ -11,12 +11,13 @@ public class StudyController : MonoBehaviour
 
     private GameObject[] Avatar; // Female1, Female2, Male1, Male2, Mannequin, Cylinder;
     private GameObject[] Spine;
+    private AvatarVoiceFeedback avatarVoice;
 
     private CSVLogger logger;
 
     List<int> procedure;
     private int currentAvatar;
-    bool rotate = false; // rotate avatar by 180° to face the participant
+    bool rotate = true; // rotate (2nd) avatar by 180° to face the participant
 
 
     private MixedRealityKeyboard keyboard;
@@ -38,6 +39,7 @@ public class StudyController : MonoBehaviour
         Avatar[4] = GameObject.Find("Mannequin_1");
         Avatar[5] = GameObject.Find("Cylinder");
 
+        avatarVoice = GameObject.Find("AvatarVoice").GetComponent<AvatarVoiceFeedback>();
 
         // Samoty Check including disabeling all avatars
         foreach (var item in Avatar)
@@ -60,8 +62,9 @@ public class StudyController : MonoBehaviour
         procedure.Shuffle();
 
         //Set First Avatar 
-        currentAvatar = 0;
-        LoadNextAvatar();
+        currentAvatar = procedure.First();
+        procedure.RemoveAt(0);
+        Avatar[currentAvatar].SetActive(true);
     }
 
     // Update is called once per frame
@@ -76,6 +79,39 @@ public class StudyController : MonoBehaviour
             logger.AddRow(loggingData);
         }
         
+    }
+
+    public void GreetingAvatar()
+    {
+        avatarVoice.PlayMaleLeft();
+        var i = UnityEngine.Random.value;
+
+        if (currentAvatar < 2) // Female Avatar
+        {
+            if (i < .5)
+                avatarVoice.PlayFemaleLeft();
+            else
+                avatarVoice.PlayFemaleRight();
+        }
+
+        if (currentAvatar < 4 && currentAvatar > 1) // Male
+            {
+                if (i < .5)
+                avatarVoice.PlayMaleLeft();
+            else
+                avatarVoice.PlayMaleRight();
+        }
+
+        if (currentAvatar > 3) // Neutral Avatar
+        {
+            if (i < .5)
+                avatarVoice.PlayNeutralLeft();
+            else
+                avatarVoice.PlayNeutralRight();
+        }
+
+
+
     }
 
     public void ArtworkRating(int rating)
@@ -110,7 +146,7 @@ public class StudyController : MonoBehaviour
             logging = false;
             logger.EndCSV();
 
-            Microsoft.MixedReality.Toolkit.Audio.TextToSpeech tts = new Microsoft.MixedReality.Toolkit.Audio.TextToSpeech();
+            Microsoft.MixedReality.Toolkit.Audio.TextToSpeech tts = GetComponent<Microsoft.MixedReality.Toolkit.Audio.TextToSpeech>();
             var msg = string.Format("Thank you. We are done. Please return the Hololens to the experimenter.", tts.Voice.ToString());
             tts.StartSpeaking(msg);
 
@@ -121,7 +157,8 @@ public class StudyController : MonoBehaviour
         //Rotate the avatar back for potential reuse
         if (!rotate)
         {
-            Avatar[currentAvatar].transform.Rotate(Vector3.up, 180);
+            Debug.Log("Rotate last Avatar back.");
+            Avatar[currentAvatar].transform.Rotate(Vector3.up, -180);
         }
 
         //Disable Current Avatar. 
@@ -129,8 +166,12 @@ public class StudyController : MonoBehaviour
         currentAvatar = procedure.First();
         procedure.RemoveAt(0);
         Avatar[currentAvatar].SetActive(true);
-
-
+        
+        if (rotate)
+        {
+            Debug.Log("Rotate Avatar.");
+            Avatar[currentAvatar].transform.Rotate(Vector3.up, 180);
+        }
         rotate = !rotate;
     }
 
