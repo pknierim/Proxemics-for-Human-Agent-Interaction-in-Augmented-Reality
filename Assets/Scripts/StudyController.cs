@@ -1,3 +1,4 @@
+using holoutils;
 using Microsoft.MixedReality.Toolkit.Experimental.UI;
 using System;
 using System.Collections;
@@ -11,6 +12,8 @@ public class StudyController : MonoBehaviour
     private GameObject[] Avatar; // Female1, Female2, Male1, Male2, Mannequin, Cylinder;
     private GameObject[] Spine;
 
+    private CSVLogger logger;
+
     List<int> procedure;
     private int currentAvatar;
     bool rotate = false; // rotate avatar by 180° to face the participant
@@ -18,6 +21,7 @@ public class StudyController : MonoBehaviour
 
     private MixedRealityKeyboard keyboard;
     private int participantId;
+    private bool logging;
 
     // Start is called before the first frame update
     void Start()
@@ -47,6 +51,9 @@ public class StudyController : MonoBehaviour
                 
         }
 
+        // Link Logger
+        logger = GetComponent<CSVLogger>();
+
         // Create Study procedure (random presentation of Avatars)
         // each Avatar is presented twice in a random order. 
         procedure = new List<int>() {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5 };
@@ -55,12 +62,19 @@ public class StudyController : MonoBehaviour
         //Set First Avatar 
         currentAvatar = 0;
         LoadNextAvatar();
-
     }
 
     // Update is called once per frame
     void Update()
     {
+        // DO Logging 
+        if (logging)
+        {
+            List<string> loggingData = new List<string>();
+            loggingData.Add(currentAvatar.ToString());
+            loggingData.Add(Avatar[currentAvatar].transform.name);
+            logger.AddRow(loggingData);
+        }
         
     }
 
@@ -82,11 +96,27 @@ public class StudyController : MonoBehaviour
         participantId = int.Parse(keyboard.Text);
         Debug.Log("Entered participant ID: " + participantId);
         keyboard.HideKeyboard();
+        logger.StartNewCSV();
+        logging = true;
     }
 
     private void LoadNextAvatar()
     {
         //ToDo: check if there is a next avatar. 
+        // show info to return HL
+        if (procedure.Count == 0)
+        {
+
+            logging = false;
+            logger.EndCSV();
+
+            Microsoft.MixedReality.Toolkit.Audio.TextToSpeech tts = new Microsoft.MixedReality.Toolkit.Audio.TextToSpeech();
+            var msg = string.Format("Thank you. We are done. Please return the Hololens to the experimenter.", tts.Voice.ToString());
+            tts.StartSpeaking(msg);
+
+            return;
+        }
+
 
         //Rotate the avatar back for potential reuse
         if (!rotate)
