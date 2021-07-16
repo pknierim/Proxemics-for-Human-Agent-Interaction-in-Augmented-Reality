@@ -1,3 +1,4 @@
+using Microsoft.MixedReality.Toolkit.Experimental.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,10 @@ public class StudyController : MonoBehaviour
     List<int> procedure;
     private int currentAvatar;
     bool rotate = false; // rotate avatar by 180° to face the participant
+
+
+    private MixedRealityKeyboard keyboard;
+    private int participantId;
 
     // Start is called before the first frame update
     void Start()
@@ -65,6 +70,20 @@ public class StudyController : MonoBehaviour
         LoadNextAvatar();
     }
 
+    public void StartStudy()
+    {
+        // Get Participant ID
+        keyboard = GetComponent<MixedRealityKeyboard>();
+        keyboard.ShowKeyboard("",false);
+    }
+
+    public void ParticipantIdInput()
+    {
+        participantId = int.Parse(keyboard.Text);
+        Debug.Log("Entered participant ID: " + participantId);
+        keyboard.HideKeyboard();
+    }
+
     private void LoadNextAvatar()
     {
         //ToDo: check if there is a next avatar. 
@@ -83,9 +102,8 @@ public class StudyController : MonoBehaviour
 
 
         rotate = !rotate;
-
-
     }
+
 }
 
 
