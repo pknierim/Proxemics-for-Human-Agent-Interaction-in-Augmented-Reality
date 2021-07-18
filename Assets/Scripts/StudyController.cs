@@ -11,6 +11,7 @@ public class StudyController : MonoBehaviour
 
     private GameObject[] Avatar; // Female1, Female2, Male1, Male2, Mannequin, Cylinder;
     private GameObject[] Spine;
+    private GameObject[] Artwork;
     private AvatarVoiceFeedback avatarVoice;
 
     private CSVLogger logger;
@@ -53,6 +54,14 @@ public class StudyController : MonoBehaviour
                 
         }
 
+        // Init Artwork
+
+        Artwork = new GameObject[4];
+        Artwork[0] = GameObject.Find("Artwork_BackRight");
+        Artwork[1] = GameObject.Find("Artwork_BackLeft");
+        Artwork[2] = GameObject.Find("Artwork_FrontRight");
+        Artwork[3] = GameObject.Find("Artwork_FrontLeft");
+
         // Link Logger
         logger = GetComponent<CSVLogger>();
 
@@ -65,6 +74,9 @@ public class StudyController : MonoBehaviour
         currentAvatar = procedure.First();
         procedure.RemoveAt(0);
         Avatar[currentAvatar].SetActive(true);
+
+        LoadNewArtwork();
+
     }
 
     // Update is called once per frame
@@ -118,6 +130,32 @@ public class StudyController : MonoBehaviour
     {
         Debug.Log("Participant provided feedback to artwork: " + rating);
         LoadNextAvatar();
+        LoadNewArtwork();
+
+    }
+
+    private void LoadNewArtwork()
+    {
+        int i=0, k=0;
+        System.Random rnd = new System.Random();
+        
+
+        while (i == k) // make sure i and k differ
+        {
+            i = rnd.Next(0, 11);
+            k = rnd.Next(0, 11);
+        }
+
+        if (!rotate)
+        { // Load Backside 
+            Artwork[0].GetComponent<ChangeTexture>().LoadTexture(i);
+            Artwork[1].GetComponent<ChangeTexture>().LoadTexture(k);
+        }
+        else
+        { // Load Frontside
+            Artwork[0].GetComponent<ChangeTexture>().LoadTexture(i);
+            Artwork[1].GetComponent<ChangeTexture>().LoadTexture(k);
+        }
     }
 
     public void StartStudy()
