@@ -129,6 +129,7 @@ public class StudyController : MonoBehaviour
             Vector3 v_cam = Vector3.ProjectOnPlane(ARCamera.transform.position, Vector3.up);
             Vector3 v_spine = Vector3.ProjectOnPlane(Spine[currentAvatar].transform.position, Vector3.up);
             var horizontal_distance = Vector3.Distance(v_cam, v_spine);
+            loggingData.Add(horizontal_distance.ToString());
 
             // Camera Position
             loggingData.Add(ARCamera.transform.position.x.ToString());
@@ -139,18 +140,8 @@ public class StudyController : MonoBehaviour
             loggingData.Add(ARCamera.transform.rotation.x.ToString());
             loggingData.Add(ARCamera.transform.rotation.y.ToString());
             loggingData.Add(ARCamera.transform.rotation.z.ToString());
-
-
-            // Participant Position
-            //loggingData.Add(ARCamera.transform.position.ToString());
-            //loggingData.Add(MainCamera.transform.position.ToString());
-
-
-
-
-
             
-            //logger.AddRow(loggingData);
+            logger.AddRow(loggingData);
         }
     }
 
@@ -190,6 +181,7 @@ public class StudyController : MonoBehaviour
     public void ArtworkRating(int rating)
     {
         trigger = "2";
+        AudioSource.clip = confirm;
         AudioSource.Play();
         Debug.Log("Participant provided feedback to artwork: " + rating);
         LoadNextAvatar();
