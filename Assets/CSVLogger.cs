@@ -34,8 +34,8 @@ namespace holoutils
     {
         #region Constants to modify
         private const string DataSuffix = "data";
-        private const string CSVHeader = "Timestamp,SessionID,RecordingID," +
-                                        "blah,blah,blah";
+        private const string CSVHeader = "Timestamp,ParticipantID,CurrentAvatar, AR Camera, Main Camera, RecordingID,";
+                                        
         private const string SessionFolderRoot = "CSVLogger";
         #endregion
 
@@ -110,6 +110,8 @@ namespace holoutils
 
         public void AddRow(List<String> rowData)
         {
+
+            Debug.Log(string.Join(",", rowData.ToArray()));
             AddRow(string.Join(",", rowData.ToArray()));
         }
 

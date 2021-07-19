@@ -20,10 +20,11 @@ public class StudyController : MonoBehaviour
     private int currentAvatar;
     bool rotate = true; // rotate (2nd) avatar by 180° to face the participant
 
+    private GameObject MainCamera, ARCamera;
 
     private MixedRealityKeyboard keyboard;
-    private int participantId;
-    private bool logging;
+    private String participantId = "-1";
+    private bool logging = true;
 
     // Start is called before the first frame update
     void Start()
@@ -42,20 +43,27 @@ public class StudyController : MonoBehaviour
 
         avatarVoice = GameObject.Find("AvatarVoice").GetComponent<AvatarVoiceFeedback>();
 
-        // Samoty Check including disabeling all avatars
-        foreach (var item in Avatar)
+
+
+        // Samoty Check including disabeling all avatars and finding spine
+
+        for (int i = 0; i < 6; i++)
         {
-            if (item == null)
+            if (Avatar[i] == null)
                 Debug.LogError("missing reference to avatar");
-            else {
-                Debug.Log(item.name + " found.");
-                item.SetActive(false);
+
+            if (Avatar[i] != null)
+            {
+                Debug.Log(Avatar[i].name + " found.");
+                Debug.Log("Find the Spine for " + Avatar[i].name);
+                Spine[i] = Avatar[i].transform.Find("Bip01/Bip01 Pelvis/Bip01 Spine").gameObject;
+                if (Spine[i] == null) Debug.LogError("Could not find the Spine for " + Avatar[i].name);
+                Avatar[i].SetActive(false);
             }
-                
+
         }
 
         // Init Artwork
-
         Artwork = new GameObject[4];
         Artwork[0] = GameObject.Find("Artwork_BackRight");
         Artwork[1] = GameObject.Find("Artwork_BackLeft");
@@ -64,6 +72,10 @@ public class StudyController : MonoBehaviour
 
         // Link Logger
         logger = GetComponent<CSVLogger>();
+
+        // Find Camera
+        //MainCamera = GameObject.Find("Main Camera");
+        ARCamera = GameObject.Find("ARCamera");
 
         // Create Study procedure (random presentation of Avatars)
         // each Avatar is presented twice in a random order. 
@@ -82,15 +94,34 @@ public class StudyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // DO Logging 
+        LogData();  
+    }
+
+    private void LogData()
+    {
         if (logging)
         {
             List<string> loggingData = new List<string>();
+
+            // Timestamp
+            loggingData.Add(DateTime.Now.ToString("yyyyMMdd_HHmmss.fff"));
+
+            // ParticipantID
+            loggingData.Add(participantId);
+
+            // CurrentAvatar
             loggingData.Add(currentAvatar.ToString());
-            loggingData.Add(Avatar[currentAvatar].transform.name);
-            logger.AddRow(loggingData);
+
+            // Participant Position
+            //loggingData.Add(ARCamera.transform.position.ToString());
+            //loggingData.Add(MainCamera.transform.position.ToString());
+
+
+
+
+
+            //logger.AddRow(loggingData);
         }
-        
     }
 
     public void GreetingAvatar()
@@ -153,8 +184,8 @@ public class StudyController : MonoBehaviour
         }
         else
         { // Load Frontside
-            Artwork[0].GetComponent<ChangeTexture>().LoadTexture(i);
-            Artwork[1].GetComponent<ChangeTexture>().LoadTexture(k);
+            Artwork[2].GetComponent<ChangeTexture>().LoadTexture(i);
+            Artwork[3].GetComponent<ChangeTexture>().LoadTexture(k);
         }
     }
 
@@ -167,11 +198,19 @@ public class StudyController : MonoBehaviour
 
     public void ParticipantIdInput()
     {
-        participantId = int.Parse(keyboard.Text);
+        participantId = keyboard.Text;
         Debug.Log("Entered participant ID: " + participantId);
         keyboard.HideKeyboard();
         logger.StartNewCSV();
         logging = true;
+
+        Microsoft.MixedReality.Toolkit.Audio.TextToSpeech tts = GetComponent<Microsoft.MixedReality.Toolkit.Audio.TextToSpeech>();
+        var msg = string.Format("Please hand over the HoloLens, the participant id is " + participantId, tts.Voice.ToString());
+        tts.StartSpeaking(msg);
+
+        // Hot fix for missing artwork.
+        LoadNewArtwork();
+
     }
 
     private void LoadNextAvatar()
