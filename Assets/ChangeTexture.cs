@@ -17,6 +17,7 @@ public class ChangeTexture : MonoBehaviour
     {
         if (no < 0 || no >= texture.Length) return;
         Debug.Log("load texture no: " + no);
-        renderer.material.mainTexture = texture[no];
+        if (renderer != null)
+            renderer.material.mainTexture = texture[no];
     }
 }

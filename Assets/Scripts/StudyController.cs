@@ -4,10 +4,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class StudyController : MonoBehaviour
 {
+    public GameObject tmp;
 
     private GameObject[] Avatar; // Female1, Female2, Male1, Male2, Mannequin, Cylinder;
     private GameObject[] Spine;
@@ -94,7 +96,9 @@ public class StudyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        LogData();  
+        LogData();
+
+        tmp.GetComponent<TextMeshProUGUI>().text = currentAvatar.ToString();
     }
 
     private void LogData()
@@ -191,6 +195,7 @@ public class StudyController : MonoBehaviour
 
     public void StartStudy()
     {
+        LoadNewArtwork();
         // Get Participant ID
         keyboard = GetComponent<MixedRealityKeyboard>();
         keyboard.ShowKeyboard("",false);
