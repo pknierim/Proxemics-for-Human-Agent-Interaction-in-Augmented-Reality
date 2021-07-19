@@ -34,7 +34,7 @@ namespace holoutils
     {
         #region Constants to modify
         private const string DataSuffix = "data";
-        private const string CSVHeader = "Timestamp,ParticipantID,CurrentAvatar, AR Camera, Main Camera, RecordingID,";
+        private const string CSVHeader = "Timestamp, ParticipantID, Trigger, CurrentAvatar, DistantaceToAvatar, CamPos.X, CamPos.Y, CamPos.Z, CamRot.X, CamRot.Y, CamRot.Z ";
                                         
         private const string SessionFolderRoot = "CSVLogger";
         #endregion

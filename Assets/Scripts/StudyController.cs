@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class StudyController : MonoBehaviour
 {
-    public GameObject tmp;
+    public AudioClip confirm;
 
     private GameObject[] Avatar; // Female1, Female2, Male1, Male2, Mannequin, Cylinder;
     private GameObject[] Spine;
@@ -17,16 +17,19 @@ public class StudyController : MonoBehaviour
     private AvatarVoiceFeedback avatarVoice;
 
     private CSVLogger logger;
+    private string trigger;
 
     List<int> procedure;
     private int currentAvatar;
     bool rotate = true; // rotate (2nd) avatar by 180° to face the participant
 
-    private GameObject MainCamera, ARCamera;
+    private GameObject ARCamera;
+    private AudioSource AudioSource;
+
 
     private MixedRealityKeyboard keyboard;
     private String participantId = "-1";
-    private bool logging = true;
+    private bool logging = false;
 
     // Start is called before the first frame update
     void Start()
@@ -76,8 +79,11 @@ public class StudyController : MonoBehaviour
         logger = GetComponent<CSVLogger>();
 
         // Find Camera
-        //MainCamera = GameObject.Find("Main Camera");
         ARCamera = GameObject.Find("ARCamera");
+
+        AudioSource = GetComponent<AudioSource>();
+        AudioSource.clip = confirm;
+
 
         // Create Study procedure (random presentation of Avatars)
         // each Avatar is presented twice in a random order. 
@@ -98,7 +104,6 @@ public class StudyController : MonoBehaviour
     {
         LogData();
 
-        tmp.GetComponent<TextMeshProUGUI>().text = currentAvatar.ToString();
     }
 
     private void LogData()
@@ -113,8 +118,28 @@ public class StudyController : MonoBehaviour
             // ParticipantID
             loggingData.Add(participantId);
 
+            // Trigger
+            loggingData.Add(trigger);
+            trigger = ""; // reset trigger
+
             // CurrentAvatar
             loggingData.Add(currentAvatar.ToString());
+
+            //Horizontal Distance between Camera and Spine  
+            Vector3 v_cam = Vector3.ProjectOnPlane(ARCamera.transform.position, Vector3.up);
+            Vector3 v_spine = Vector3.ProjectOnPlane(Spine[currentAvatar].transform.position, Vector3.up);
+            var horizontal_distance = Vector3.Distance(v_cam, v_spine);
+
+            // Camera Position
+            loggingData.Add(ARCamera.transform.position.x.ToString());
+            loggingData.Add(ARCamera.transform.position.y.ToString());
+            loggingData.Add(ARCamera.transform.position.z.ToString());
+
+            // Camera Orientation 
+            loggingData.Add(ARCamera.transform.rotation.x.ToString());
+            loggingData.Add(ARCamera.transform.rotation.y.ToString());
+            loggingData.Add(ARCamera.transform.rotation.z.ToString());
+
 
             // Participant Position
             //loggingData.Add(ARCamera.transform.position.ToString());
@@ -124,13 +149,14 @@ public class StudyController : MonoBehaviour
 
 
 
+            
             //logger.AddRow(loggingData);
         }
     }
 
     public void GreetingAvatar()
     {
-        avatarVoice.PlayMaleLeft();
+        trigger = "1";
         var i = UnityEngine.Random.value;
 
         if (currentAvatar < 2) // Female Avatar
@@ -163,6 +189,8 @@ public class StudyController : MonoBehaviour
 
     public void ArtworkRating(int rating)
     {
+        trigger = "2";
+        AudioSource.Play();
         Debug.Log("Participant provided feedback to artwork: " + rating);
         LoadNextAvatar();
         LoadNewArtwork();
