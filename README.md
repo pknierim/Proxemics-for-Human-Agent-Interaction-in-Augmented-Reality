@@ -1,12 +1,13 @@
 # Proxemics for Human-Agent Interaction in Augmented Reality
 AR Proxemics Study Environment for HoloLens 2
 
-This repository contains Unity Project and HoloLens Application of the CHI'22 paper "Proxemics for Human-Agent Interaction in Augmented Reality."
+This repository contains Unity Project and HoloLens Application of the CHI'22 paper "Proxemics for Human-Agent Interaction in Augmented Reality".
 
 # Abstract 
-Virtual reality experiences increasingly use physiological data for virtual environment adaptations to evaluate user experience and immersion. Previous research required complex medical-grade equipment to collect physiological data, limiting real-world applicability. To overcome this, we present SensCon for skin conductance and heart rate data acquisition. To identify the optimal sensor location in the controller, we conducted a first study investigating users' controller grasp behavior. In a second study, we evaluated the performance of SensCon against medical-grade devices in six scenarios regarding user experience and signal quality. Users subjectively preferred SensCon in terms of usability and user experience. Moreover, the signal quality evaluation showed satisfactory accuracy across static, dynamic, and cognitive scenarios. Therefore, SensCon reduces the complexity of capturing and adapting the environment via real-time physiological data. By open-sourcing SensCon, we enable researchers and practitioners to adapt their virtual reality environment effortlessly. Finally, we discuss possible use cases for virtual reality-embedded physiological sensing.
+Augmented Reality (AR) embeds virtual content in physical spaces, including virtual agentsthat are known to exert a social presence on
+users. Existing design guidelines for AR rarely consider the social implications of an agent’s personal space (PS) and that it can impact user behavior and arousal. We report an experiment (N=54) where participants interacted with agents in an AR art gallery scenario. When participants approached six virtual agents (i.e., two males, two females, a humanoid robot, and a pillar) to ask for directions, we found that participants respected the agents’ PS and modulated interpersonal distances according to the human-like agents’ perceived gender. When participants were instructed to walk through the agents, we observed heightened skin-conductance levels that indicate physiological arousal. These results are discussed in terms of proxemic theory that result in design recommendations for implementing pervasive AR experiences with virtual agents
 
-DOI: https://doi.org/XXX/XXX
+DOI: https://doi.org/10.1145/3491102.3517593
 
 # Application 
 
